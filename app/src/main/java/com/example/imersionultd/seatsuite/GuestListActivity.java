@@ -1,11 +1,8 @@
 package com.example.imersionultd.seatsuite;
 
-import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,8 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -29,7 +24,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class addGuestActivity extends AppCompatActivity
+public class GuestListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     static ArrayList<String> fruits = new ArrayList<>();
@@ -38,7 +33,7 @@ public class addGuestActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_guest);
+        setContentView(R.layout.activity_guest_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -107,7 +102,7 @@ public class addGuestActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.add_guest, menu);
+        getMenuInflater().inflate(R.menu.guest_list, menu);
         return true;
     }
 
