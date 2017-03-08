@@ -1,6 +1,7 @@
 package com.example.imersionultd.seatsuite;
 
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,7 +9,7 @@ import java.util.Set;
  * Created by YonahKarp on 3/2/17.
  */
 
-public class Guest implements Comparable<Guest> {
+public class Guest implements Comparable<Guest>, Serializable {
     private String name; //must be unique
     private int age;
     private boolean male; //gender
@@ -129,6 +130,11 @@ public class Guest implements Comparable<Guest> {
     }
 
 
+
+    @Override
+    public String toString(){
+        return name + " (" + age +") ";
+    }
 
     @Override
     public int compareTo(Guest guest) {

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_add_guest"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.imersionultd.seatsuite.AddGuestActivity"
+    tools:showIn="@layout/activity_add_guest">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="18dp"
+        android:id="@+id/nameTxt"
+        android:hint="Name"
+        style="@style/Widget.AppCompat.EditText"
+        android:backgroundTint="@color/colorPrimary" />
+
+
+    <TextView
+        android:text="Female"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/FemaleLabel"
+        android:layout_alignBaseline="@+id/genderSwitch"
+        android:layout_alignBottom="@+id/genderSwitch"
+        android:layout_toEndOf="@+id/genderSwitch"
+        android:textSize="18sp" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/genderSwitch"
+        android:textOn="Female  "
+        android:splitTrack="false"
+        android:textOff="Male"
+        android:checked="false"
+        android:switchTextAppearance="@style/TextAppearance.AppCompat.Widget.Switch"
+        android:layout_below="@+id/ageTxt"
+        android:layout_toEndOf="@+id/maleLabel"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="2px" />
+
+    <TextView
+        android:text="Male"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/maleLabel"
+        android:layout_alignBaseline="@+id/genderSwitch"
+        android:layout_alignBottom="@+id/genderSwitch"
+        android:layout_alignStart="@+id/ageTxt"
+        android:textSize="18sp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_marginTop="14dp"
+        android:id="@+id/ageTxt"
+        android:hint="Age"
+        android:layout_below="@+id/nameTxt"
+        android:layout_alignStart="@+id/nameTxt" />
+
+    <TextView
+        android:text="Preferences"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/genderSwitch"
+        android:layout_alignStart="@+id/maleLabel"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/textView3"
+        android:layout_alignStart="@+id/textView3"
+        android:id="@+id/guestList" />
+
+    <Button
+        android:text="Add Guest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button3"
+        android:onClick="goToGuestList"
+        android:layout_below="@+id/guestList"
+        android:layout_marginTop="16dp"
+        android:layout_alignStart="@+id/guestList" />
+
+
+</RelativeLayout>

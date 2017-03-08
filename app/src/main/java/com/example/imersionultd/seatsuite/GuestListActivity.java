@@ -1,5 +1,6 @@
 package com.example.imersionultd.seatsuite;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -21,14 +22,18 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GuestListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    static ArrayList<String> fruits = new ArrayList<>();
-    static ArrayAdapter<String> listAdapter;
+    //public ArrayList<String> fruits = new ArrayList<>();
+    //public ArrayAdapter<String> listAdapter;
+
+    public GuestList guestList = new GuestList();
+    public ArrayAdapter<Guest> listAdapterGuest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +41,6 @@ public class GuestListActivity extends AppCompatActivity
         setContentView(R.layout.activity_guest_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -57,23 +52,52 @@ public class GuestListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        //getVal from previous view;
+        //String newVal = getIntent().getStringExtra("newValue");
+
+        Bundle guestsBundle = getIntent().getBundleExtra("guests");
+        GuestList guests = null;
+        if(guestsBundle != null)
+            guests = ((GuestListWrapper) guestsBundle.getSerializable("guests")).list;
+
+
+
+
         /**
          * Set up listView w/ delete functionality
          */
-        fruits.addAll(Arrays.asList("Apple", "Banana", "Cherry", "Kiwi", "Lemon", "Pear"));
-        listAdapter = new ArrayAdapter<String>(this, R.layout.list_item_guest,fruits);
+        //if(fruits.isEmpty())
+            //fruits.addAll(Arrays.asList("Apple", "Banana", "Cherry", "Kiwi", "Lemon", "Pear"));
+
+        if(guests == null) {
+            guestList.add(new Guest("Reuven", 20, true));
+            guestList.add(new Guest("Shimon", 25, true));
+            guestList.add(new Guest("Sara", 23, false));
+            guestList.add(new Guest("Levi", 31, true));
+            guestList.add(new Guest("Rivka", 28, false));
+        }else {
+            guestList = guests;
+        }
+
+
+
+        //if(newVal != null)
+            //fruits.add(newVal);
+
+        //listAdapter = new ArrayAdapter<String>(this, R.layout.list_item_guest,fruits);
+        listAdapterGuest = new ArrayAdapter<>(this, R.layout.list_item_guest, guestList);
 
         //SwipeMenuList view from API
         SwipeMenuListView listView = (SwipeMenuListView) findViewById(R.id.guestList);
         listView.setMenuCreator(createSwipeMenu());
-        listView.setAdapter(listAdapter);
+        listView.setAdapter(listAdapterGuest);
 
 
         //on click of individual item
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Toast.makeText(getApplicationContext(), fruits.get(position),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), guestList.get(position).toString(),Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -81,8 +105,8 @@ public class GuestListActivity extends AppCompatActivity
         listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                fruits.remove(position);
-                listAdapter.notifyDataSetChanged(); //updates list
+                guestList.remove(position);
+                listAdapterGuest.notifyDataSetChanged(); //updates list
 
                 return true; //removes swipeView from screen
             }
@@ -91,6 +115,7 @@ public class GuestListActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -147,7 +172,16 @@ public class GuestListActivity extends AppCompatActivity
     }
 
     public void addGuest(MenuItem item){
-        Toast.makeText(this, "add Guest", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "add Guest", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(GuestListActivity.this, AddGuestActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("guests", new GuestListWrapper(guestList));
+
+        intent.putExtra("guests",bundle);
+
+        startActivity(intent);
     }
 
     //from API
