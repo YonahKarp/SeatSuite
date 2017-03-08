@@ -1,5 +1,6 @@
 package com.example.imersionultd.seatsuite;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -29,11 +30,10 @@ import java.util.Arrays;
 public class GuestListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    //public ArrayList<String> fruits = new ArrayList<>();
-    //public ArrayAdapter<String> listAdapter;
-
     public GuestList guestList = new GuestList();
     public ArrayAdapter<Guest> listAdapterGuest;
+
+    public Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,39 +52,20 @@ public class GuestListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        //getVal from previous view;
-        //String newVal = getIntent().getStringExtra("newValue");
 
-        Bundle guestsBundle = getIntent().getBundleExtra("guests");
-        GuestList guests = null;
-        if(guestsBundle != null)
-            guests = ((GuestListWrapper) guestsBundle.getSerializable("guests")).list;
-
-
-
-
-        /**
+        /*
          * Set up listView w/ delete functionality
          */
-        //if(fruits.isEmpty())
-            //fruits.addAll(Arrays.asList("Apple", "Banana", "Cherry", "Kiwi", "Lemon", "Pear"));
-
-        if(guests == null) {
+        if(!guestList.loadData(this,"guests")){
             guestList.add(new Guest("Reuven", 20, true));
             guestList.add(new Guest("Shimon", 25, true));
             guestList.add(new Guest("Sara", 23, false));
             guestList.add(new Guest("Levi", 31, true));
             guestList.add(new Guest("Rivka", 28, false));
-        }else {
-            guestList = guests;
         }
 
 
 
-        //if(newVal != null)
-            //fruits.add(newVal);
-
-        //listAdapter = new ArrayAdapter<String>(this, R.layout.list_item_guest,fruits);
         listAdapterGuest = new ArrayAdapter<>(this, R.layout.list_item_guest, guestList);
 
         //SwipeMenuList view from API
@@ -106,6 +87,9 @@ public class GuestListActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 guestList.remove(position);
+
+                guestList.saveData(context, "guests"); //saves changes in memory
+
                 listAdapterGuest.notifyDataSetChanged(); //updates list
 
                 return true; //removes swipeView from screen
@@ -138,11 +122,6 @@ public class GuestListActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        /*noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }*/
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -172,14 +151,8 @@ public class GuestListActivity extends AppCompatActivity
     }
 
     public void addGuest(MenuItem item){
-        //Toast.makeText(this, "add Guest", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(GuestListActivity.this, AddGuestActivity.class);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("guests", new GuestListWrapper(guestList));
-
-        intent.putExtra("guests",bundle);
 
         startActivity(intent);
     }
