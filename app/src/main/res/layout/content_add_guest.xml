@@ -9,9 +9,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+
+
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.imersionultd.seatsuite.AddGuestActivity"
     tools:showIn="@layout/activity_add_guest">
+
+    <!-- clickable & focusable added above for keyboard dismissal-->
 
     <EditText
         android:layout_width="wrap_content"
@@ -83,7 +90,7 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:layout_below="@+id/textView3"
         android:layout_alignStart="@+id/textView3"
         android:id="@+id/guestList" />
@@ -92,7 +99,7 @@
         android:text="Add Guest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button3"
+        android:id="@+id/doneButton"
         android:onClick="goToGuestList"
         android:layout_below="@+id/guestList"
         android:layout_marginTop="16dp"

@@ -16,5 +16,22 @@ public class GuestTest {
         guest = new Guest("Steve", 27, true);
     }
 
+    @Test
+    public void getPreferenceWorks(){
+        GuestList list = new GuestList();
+
+        list.add(guest);
+
+
+
+        Guest newGuest = new Guest("Josh", 22, false);
+        list.add(newGuest);
+
+        System.out.println("guestList size: " +list.size());
+
+        System.out.println(guest.getPreference(newGuest));
+
+    }
+
 
 }

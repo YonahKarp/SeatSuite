@@ -56,12 +56,15 @@ public class GuestListActivity extends AppCompatActivity
         /*
          * Set up listView w/ delete functionality
          */
-        if(!guestList.loadData(this,"guests")){
+        if(!guestList.loadData(this,"guests") || guestList.size() == 0){
             guestList.add(new Guest("Reuven", 20, true));
             guestList.add(new Guest("Shimon", 25, true));
-            guestList.add(new Guest("Sara", 23, false));
             guestList.add(new Guest("Levi", 31, true));
+            guestList.add(new Guest("Sara", 23, false));
             guestList.add(new Guest("Rivka", 28, false));
+            guestList.add(new Guest("Rachel", 28, false));
+
+            guestList.saveData(context, "guests");
         }
 
 
@@ -79,6 +82,18 @@ public class GuestListActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Toast.makeText(getApplicationContext(), guestList.get(position).toString(),Toast.LENGTH_SHORT).show();
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("edit", guestList.get(position));
+                bundle.putInt("index", position);
+
+                Intent intent = new Intent(GuestListActivity.this, AddGuestActivity.class);
+
+                intent.putExtras(bundle);
+
+                startActivity(intent);
+
+
             }
         });
 

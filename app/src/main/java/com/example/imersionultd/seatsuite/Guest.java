@@ -14,6 +14,7 @@ public class Guest implements Comparable<Guest>, Serializable {
     private int age;
     private boolean male; //gender
 
+    public PreferenceList preferenceList = new PreferenceList();
 
     private Set<Guest> blacklist = new HashSet<>();
     private Set<Guest> greylist = new HashSet<>(); //prefers to sit next to
@@ -30,13 +31,17 @@ public class Guest implements Comparable<Guest>, Serializable {
      */
 
     public String getName() {return name;}
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getAge() {return age;}
     public void setAge(int age) {this.age = age;}
 
     public boolean isMale() {return male;}
-
-
+    public void setMale(boolean male) {
+        this.male = male;
+    }
 
     /**
      *  blacklist add/remove
@@ -129,6 +134,31 @@ public class Guest implements Comparable<Guest>, Serializable {
         return guest.name +" could not be added to this list. " + (guest.male? "He":"She") + " already exists on " + name +"'s "+ color+"  list";
     }
 
+    /**
+     * Preference List methods
+     */
+
+    public void addToPreferenceList(Guest guest){
+        preferenceList.put(guest, 5);
+        System.out.println(guest.name);
+    }
+
+    public void removeFromPreferenceList(Guest guest){
+        preferenceList.remove(guest);
+    }
+
+
+    public int getPreference(Guest guest){
+        if(preferenceList.containsKey(guest))
+            return preferenceList.get(guest);
+        else
+            return 0;
+    }
+
+    public void setPreference(Guest guest, int val){
+        preferenceList.put(guest, val);
+    }
+
 
 
     @Override
@@ -139,5 +169,21 @@ public class Guest implements Comparable<Guest>, Serializable {
     @Override
     public int compareTo(Guest guest) {
         return name.compareTo(guest.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Guest))
+            return false;
+
+        Guest guest = (Guest) obj;
+
+        return name.equals(guest.name);
+
     }
 }

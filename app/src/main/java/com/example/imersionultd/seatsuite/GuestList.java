@@ -20,7 +20,35 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
     }
 
     public void add(String name, int age, boolean male){
-        add(new Guest(name, age, male));
+        Guest newGuest = new Guest(name, age, male);
+
+        System.out.println("adding to guestList");
+
+        for (Guest guest: this) {
+            guest.addToPreferenceList(newGuest); //add new guest to all other lists
+            newGuest.addToPreferenceList(guest); //add all others to newGuest's list
+        }
+
+        super.add(newGuest);
+    }
+
+    @Override
+    public boolean add(Guest newGuest) {
+
+        for (Guest guest: this) {
+            guest.addToPreferenceList(newGuest); //add new guest to all other lists
+            newGuest.addToPreferenceList(guest); //add all others to newGuest's list
+        }
+        return super.add(newGuest);
+    }
+
+    //inefficient O(n)
+    public Guest get(String key){
+        for (Guest guest: this) {
+            if(guest.getName().equals(key))
+                return guest;
+        }
+        return null;
     }
 
 
