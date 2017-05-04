@@ -1,4 +1,4 @@
-package com.example.imersionultd.seatsuite;
+package com.example.imersionultd.seatsuite.Adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.example.imersionultd.seatsuite.Classes.Guest;
+import com.example.imersionultd.seatsuite.Classes.GuestList;
+import com.example.imersionultd.seatsuite.R;
 
 /**
  * Created by YonahKarp on 3/14/17.
@@ -73,7 +77,7 @@ public class PreferenceListAdapter extends BaseAdapter {
 
         holder.nameTxt.setText(list.get(i).getName());
 
-        int tmp = currGuest.getPreference(list.get(i));
+        int tmp = (int)currGuest.getPreference(list.get(i));
         holder.seekBar.setProgress(tmp);
         holder.progressTxt.setText(getEmote(tmp));
 
@@ -95,7 +99,7 @@ public class PreferenceListAdapter extends BaseAdapter {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                currGuest.setPreference(list.get(i),seekBar.getProgress());
+                currGuest.setPreference(list.get(i),(double)seekBar.getProgress());
             }
         });
 
@@ -104,27 +108,6 @@ public class PreferenceListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(context, "You Clicked "+list.get(i), Toast.LENGTH_SHORT).show();
-//                String txt = (String) holder.progressTxt.getText();
-//
-//                //must sit
-//                try {
-//                    Integer.parseInt(txt);
-//                    holder.seekBar.setProgress(10);
-//                    holder.progressTxt.setText("\uD83D\uDD17");//link symbol
-//                    return;
-//                }catch (Exception e){}
-//
-//                //can't sit
-//                if (txt == "\uD83D\uDD17"){
-//                    holder.seekBar.setProgress(0);
-//                    holder.progressTxt.setText("\uD83D\uDEAB");//no symbol 0
-//                }
-//                else {
-//                    holder.seekBar.setProgress(5);
-//                    holder.progressTxt.setText("5");//no symbol 0
-//                }
-
-
             }
         });
 

@@ -1,4 +1,4 @@
-package com.example.imersionultd.seatsuite;
+package com.example.imersionultd.seatsuite.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,10 +22,9 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.example.imersionultd.seatsuite.Classes.Guest;
+import com.example.imersionultd.seatsuite.Classes.GuestList;
+import com.example.imersionultd.seatsuite.R;
 
 public class GuestListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -77,11 +76,11 @@ public class GuestListActivity extends AppCompatActivity
         listView.setAdapter(listAdapterGuest);
 
 
-        //on click of individual item
+        //onClick of individual item
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Toast.makeText(getApplicationContext(), guestList.get(position).toString(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), guestList.get(position).toString(),Toast.LENGTH_SHORT).show();
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("edit", guestList.get(position));
@@ -146,8 +145,8 @@ public class GuestListActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_seat) {
+            startActivity(new Intent(GuestListActivity.this, SeatGuestsActivity.class));
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

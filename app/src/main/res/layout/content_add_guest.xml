@@ -15,7 +15,7 @@
     android:focusableInTouchMode="true"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.imersionultd.seatsuite.AddGuestActivity"
+    tools:context="com.example.imersionultd.seatsuite.Activities.AddGuestActivity"
     tools:showIn="@layout/activity_add_guest">
 
     <!-- clickable & focusable added above for keyboard dismissal-->
@@ -79,14 +79,14 @@
         android:layout_alignStart="@+id/nameTxt" />
 
     <TextView
-        android:text="Preferences"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/genderSwitch"
         android:layout_alignStart="@+id/maleLabel"
+        android:layout_below="@+id/genderSwitch"
         android:layout_marginTop="16dp"
-        android:textSize="16sp" />
+        android:text="Preferences"
+        android:textSize="18sp" />
 
     <ListView
         android:layout_width="match_parent"
@@ -104,6 +104,17 @@
         android:layout_below="@+id/guestList"
         android:layout_marginTop="16dp"
         android:layout_alignStart="@+id/guestList" />
+
+    <Button
+        android:id="@+id/autoGenBtn"
+        android:onClick="recalculatePreferences"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Auto-Generate prefernces"
+        android:textSize="10sp"
+        android:layout_above="@+id/guestList"
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_below="@+id/genderSwitch" />
 
 
 </RelativeLayout>

@@ -6,4 +6,9 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_add_guest">AddGuestActivity</string>
+    <string name="title_activity_seat_guests">SeatGuestsActivity</string>
+
+    <string-array name="Algorithms">
+        <item>Basic Seating</item>
+    </string-array>
 </resources>
