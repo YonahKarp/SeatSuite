@@ -104,6 +104,7 @@ public class SeatGuestsActivity extends AppCompatActivity
 
         if (id == R.id.nav_guestList) {
             startActivity(new Intent(SeatGuestsActivity.this, GuestListActivity.class));
+            finish();
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

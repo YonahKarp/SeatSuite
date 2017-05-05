@@ -23,7 +23,7 @@ public class AddGuestActivity extends AppCompatActivity {
     private GuestList guestList = new GuestList();
     private boolean isEdit = false;
 
-    private Guest currGuest = new Guest("",30, true);
+    private Guest currGuest;
 
     private PreferenceListAdapter preferenceListAdapter;
 
@@ -41,12 +41,15 @@ public class AddGuestActivity extends AppCompatActivity {
         Switch gender = ((Switch) findViewById(R.id.genderSwitch));
 
         guestList.loadData(this,"guests");
+        currGuest = new Guest("",30, true);
 
         Bundle bundle = getIntent().getExtras();
 
+
+        int index = guestList.size();
         if(bundle != null){
             isEdit = true;
-            int index = bundle.getInt("index");
+            index = bundle.getInt("index");
 
             currGuest = (Guest) bundle.getSerializable("edit");
 
@@ -88,9 +91,6 @@ public class AddGuestActivity extends AppCompatActivity {
 
         //getSupportActionBar().setTitle("Edit Guest");  //provide compatibility to all the versions
 
-
-
-
         if(!isEdit){
             guestList.add(currGuest);
         }
@@ -98,9 +98,9 @@ public class AddGuestActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.guestList);
 
-        GuestList filteredList = guestList.filtered(currGuest);
+        //GuestList filteredList = guestList.filtered(currGuest);
 
-        preferenceListAdapter = new PreferenceListAdapter(this, filteredList, currGuest);
+        preferenceListAdapter = new PreferenceListAdapter(this, guestList, currGuest, index);
 
         listView.setAdapter(preferenceListAdapter);
     }
@@ -132,9 +132,12 @@ public class AddGuestActivity extends AppCompatActivity {
 
         guestList.saveData(this, "guests");
 
+
+
         Intent intent = new Intent(AddGuestActivity.this, GuestListActivity.class);
 
         startActivity(intent);
+        finish();
     }
 
     public void hideKeyboard(View view) {

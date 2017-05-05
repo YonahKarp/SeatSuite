@@ -29,6 +29,10 @@ import com.example.imersionultd.seatsuite.R;
 public class GuestListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    //todo add nice frame around list,
+        //with number of guests on top
+
+
     public GuestList guestList = new GuestList();
     public ArrayAdapter<Guest> listAdapterGuest;
 
@@ -90,7 +94,9 @@ public class GuestListActivity extends AppCompatActivity
 
                 intent.putExtras(bundle);
 
+
                 startActivity(intent);
+                finish();
 
 
             }
@@ -147,6 +153,7 @@ public class GuestListActivity extends AppCompatActivity
 
         if (id == R.id.nav_seat) {
             startActivity(new Intent(GuestListActivity.this, SeatGuestsActivity.class));
+            finish(); //
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -178,7 +185,7 @@ public class GuestListActivity extends AppCompatActivity
             public void create(SwipeMenu menu) {
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                deleteItem.setBackground(new ColorDrawable(Color.RED));
                 deleteItem.setWidth(180);
                 deleteItem.setIcon(R.drawable.ic_delete);
                 // add to menu

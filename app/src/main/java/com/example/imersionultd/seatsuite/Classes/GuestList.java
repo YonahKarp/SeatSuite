@@ -17,12 +17,16 @@ import java.util.Stack;
 
 public class GuestList extends ArrayList<Guest> implements Serializable {
 
+    private Integer maxId; //auto incrementing id
+
     public GuestList(){
         super();
     }
 
+
     public void add(String name, int age, boolean male){
         Guest newGuest = new Guest(name, age, male);
+        newGuest.setId(getMaxId());
 
         for (Guest guest: this) {
             guest.addToPreferenceList(newGuest); //add new guest to all other lists
@@ -34,6 +38,7 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
 
     @Override
     public boolean add(Guest newGuest) {
+        newGuest.setId(getMaxId());
 
         for (Guest guest: this) {
             guest.addToPreferenceList(newGuest); //add new guest to all other lists
@@ -58,9 +63,6 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
 
         for (Guest guest : this) {
             guest.removeFromPreferenceList(removed);
-            //guest.removeFromWhitelist(removed);
-            //guest.removeFromBlacklist(removed);
-            //guest.removeFromGreylist(removed);
         }
 
         return removed;
@@ -205,6 +207,18 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
             if (neighbor.equals(val))
                 return true;
         return false;
+    }
+
+    private int getMaxId(){
+        if (maxId == null){
+            maxId = -1;
+            for (Guest guest: this)
+                if (guest.getId() > maxId)
+                    maxId = guest.getId();
+        }
+
+        //note it also increments the max
+        return ++maxId;
     }
 
 }

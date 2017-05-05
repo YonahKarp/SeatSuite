@@ -26,7 +26,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.SeatGuestsActivity"
-            android:label="@string/title_activity_seat_guests"
+            android:label="Seat Guests"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

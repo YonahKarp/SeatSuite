@@ -12,27 +12,30 @@ import android.widget.TextView;
 import com.example.imersionultd.seatsuite.Classes.Guest;
 import com.example.imersionultd.seatsuite.Classes.GuestList;
 import com.example.imersionultd.seatsuite.R;
+import com.example.imersionultd.seatsuite.Services.AssetLoader;
+
+import java.util.Iterator;
 
 /**
  * Created by YonahKarp on 3/14/17.
  */
 
 public class PreferenceListAdapter extends BaseAdapter {
-    GuestList list;
-    Context context;
-    Guest currGuest;
-    Typeface custom_font;
-
-
+    private GuestList list;
+    private Context context;
+    private Guest currGuest;
+    private Typeface custom_font;
+    private int hiddenIndex;
 
     private static LayoutInflater inflater = null;
 
-    public PreferenceListAdapter(Context context, GuestList list, Guest currGuest){
+    public PreferenceListAdapter(Context context, GuestList list, Guest currGuest, int guestIndex){
         this.context = context;
         this.list = list;
+        this.hiddenIndex = guestIndex;
         this.currGuest = currGuest;
 
-        custom_font = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/AppleEmoji.ttf");
+        custom_font = AssetLoader.getInstance().getFont(context);
 
 
         inflater = (LayoutInflater)context.
@@ -43,7 +46,8 @@ public class PreferenceListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        // -1 because we want to ignore current guest
+        return list.size() - 1;
     }
 
     @Override
@@ -64,7 +68,11 @@ public class PreferenceListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
+
+        //skip hidden guest
+        if(i >= hiddenIndex)
+            i += 1;
 
         final Holder holder=new Holder();
         View rowView;
@@ -75,6 +83,8 @@ public class PreferenceListAdapter extends BaseAdapter {
         holder.seekBar=(SeekBar) rowView.findViewById(R.id.setPreferenceSeekbar);
 
 
+
+
         holder.nameTxt.setText(list.get(i).getName());
 
         int tmp = (int)currGuest.getPreference(list.get(i));
@@ -82,6 +92,8 @@ public class PreferenceListAdapter extends BaseAdapter {
         holder.progressTxt.setText(getEmote(tmp));
 
         holder.progressTxt.setTypeface(custom_font);
+
+        final int iTmp = i;
 
         holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -99,7 +111,7 @@ public class PreferenceListAdapter extends BaseAdapter {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                currGuest.setPreference(list.get(i),(double)seekBar.getProgress());
+                currGuest.setPreference(list.get(iTmp),(double)seekBar.getProgress());
             }
         });
 

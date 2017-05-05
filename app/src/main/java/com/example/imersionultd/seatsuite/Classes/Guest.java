@@ -13,11 +13,13 @@ import java.util.Map;
  */
 
 public class Guest implements Comparable<Guest>, Serializable {
+
+    private Integer id; //id is used for identifying guest so preferences will remain even if name is changed
+
     private String name; //must be unique
     private int age;
     private boolean male; //gender
     boolean isSeated = false;
-
 
     int connections = 0;
 
@@ -31,25 +33,24 @@ public class Guest implements Comparable<Guest>, Serializable {
         this.name = name;
         this.age = age;
         this.male = male;
+
     }
 
     /**
      * Getters and setters
      */
-
     public String getName() {return name;}
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name;}
 
     public int getAge() {return age;}
     public void setAge(int age) {this.age = age;}
 
     public boolean isMale() {return male;}
-    public void setMale(boolean male) {
-        this.male = male;
-    }
+    public void setMale(boolean male) { this.male = male;}
 
+    public void setId(int id) { this.id = id;}
+
+    public int getId() {return id;}
 
     /**
      * Preference List methods
@@ -74,6 +75,7 @@ public class Guest implements Comparable<Guest>, Serializable {
 
     public void setPreference(Guest guest, Double val){
         preferenceList.put(guest, val);
+        guest.preferenceList.put(this, val);
     }
 
     public double autoGenPreference(Guest guest){
@@ -89,7 +91,7 @@ public class Guest implements Comparable<Guest>, Serializable {
         if(preference >= 10)
             preference = 9 + .01 * preference;
         if (preference <= 0)
-            preference = 1 + .001 * preference; //sets apart not-like from really-not-like with auto gen fixme giving 0 for some reason
+            preference = 1 + .001 * preference; //sets apart not-like from really-not-like with auto-gen
 
         return preference;
     }
@@ -212,22 +214,19 @@ public class Guest implements Comparable<Guest>, Serializable {
     }
 
 
-
-
-
     @Override
     public String toString(){
-        return name + " (" + age +") ";
+        return name + " (" + age +") id: " + id;
     }
 
     @Override
     public int compareTo(Guest guest) {
-        return name.compareTo(guest.name);
+        return id.compareTo(guest.id);
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return id.hashCode();
     }
 
     @Override
@@ -237,100 +236,7 @@ public class Guest implements Comparable<Guest>, Serializable {
 
         Guest guest = (Guest) obj;
 
-        return name.equals(guest.name);
+        return id.equals(guest.id);
 
     }
-
-
-    /**
-     *  blacklist add/remove
-     */
-    /*
-    public String addGuestToBlacklist(Guest guest){
-
-        if(greylistContains(guest) )
-            //messages will be more user friendly on release // TODO: 3/2/17 User friendly messages
-            return couldNotBeAddededMessage(guest, "grey");
-        if(whitelistContains(guest) )
-            return couldNotBeAddededMessage(guest, "white");
-        if(blacklistContains(guest))
-            return guest.name +" already exists on this list";
-
-        blacklist.add(guest);
-        return guest.name +" added to " + name +"'s black list";
-    }
-
-
-
-    public String removeFromBlacklist(Guest guest){
-        if (!blacklistContains(guest))
-            return guest.name +" was not found on this list";
-        blacklist.remove(guest);
-        return guest.name +"removed";
-    }
-
-    public boolean blacklistContains(Guest guest){
-        return blacklist.contains(guest);
-    }
-
-
-     //greylist add/remove
-    public String addGuestToGreylist(Guest guest){
-
-        if(blacklistContains(guest) )
-            return couldNotBeAddededMessage(guest, "black");
-        if(whitelistContains(guest) )
-            return couldNotBeAddededMessage(guest, "white");
-        if(greylistContains(guest))
-            return guest.name +" already exists on this list";
-
-        greylist.add(guest);
-        return guest.name +" added to " + name +"'s grey list";
-    }
-
-    public String removeFromGreylist(Guest guest){
-        if (!greylistContains(guest))
-            return guest.name +" was not found on this list";
-        greylist.remove(guest);
-        return guest.name +"removed";
-    }
-
-    public boolean greylistContains(Guest guest){
-        return greylist.contains(guest);
-    }
-
-
-     *  whitelist add/remove
-     /
-    public String addGuestToWhitelist(Guest guest){
-
-        if (whitelist.size() >= 2)
-            return "Only 2 guests can be added to the white list at a time";
-
-        if(blacklistContains(guest) )
-            return couldNotBeAddededMessage(guest, "black");
-        if(greylistContains(guest) )
-            return couldNotBeAddededMessage(guest, "grey");
-        if(whitelistContains(guest))
-            return guest.name +" already exists on this list";
-
-        whitelist.add(guest);
-        return guest.name +" added to " + name +"'s white list";
-    }
-
-    public String removeFromWhitelist(Guest guest){
-        if (!whitelistContains(guest))
-            return guest.name +" was not found on this list";
-        whitelist.remove(guest);
-        return guest.name +"removed";
-    }
-
-    public boolean whitelistContains(Guest guest){
-        return whitelist.contains(guest);
-    }
-
-    private String couldNotBeAddededMessage(Guest guest, String color) {
-        return guest.name +" could not be added to this list. " + (guest.male? "He":"She") + " already exists on " + name +"'s "+ color+"  list";
-    }*/
-
 }
