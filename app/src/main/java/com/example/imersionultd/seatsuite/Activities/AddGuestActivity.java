@@ -96,7 +96,7 @@ public class AddGuestActivity extends AppCompatActivity {
         }
 
 
-        ListView listView = (ListView) findViewById(R.id.guestList);
+        ListView listView = (ListView) findViewById(R.id.neighborsList);
 
         //GuestList filteredList = guestList.filtered(currGuest);
 
@@ -146,7 +146,7 @@ public class AddGuestActivity extends AppCompatActivity {
     }
 
     public void recalculatePreferences(View view){
-        currGuest.recalculateChanges();
+        currGuest.recalculateChanges(guestList);
         preferenceListAdapter.notifyDataSetChanged();
     }
 

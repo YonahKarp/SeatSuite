@@ -1,12 +1,18 @@
 package com.example.imersionultd.seatsuite.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,11 +22,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.imersionultd.seatsuite.Classes.Guest;
 import com.example.imersionultd.seatsuite.Classes.GuestList;
@@ -28,12 +40,17 @@ import com.example.imersionultd.seatsuite.Classes.TableArray;
 import com.example.imersionultd.seatsuite.R;
 import com.example.imersionultd.seatsuite.Services.ResourceDrawer;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class SeatGuestsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private TableArray tableSeats;
     private GuestList guestList = new GuestList();
     private TextView[] seats;
     private boolean noGuests = false;
+    private boolean guestsSeated = false;
 
 
 
@@ -58,6 +75,7 @@ public class SeatGuestsActivity extends AppCompatActivity
             findViewById(R.id.goBtn).setEnabled(false);
 
 
+        tableSeats = new TableArray(guestList.size());
         seats = new TextView[guestList.size()];
         drawSeats();
         //todo setTapListeners(seats);
@@ -105,15 +123,9 @@ public class SeatGuestsActivity extends AppCompatActivity
         if (id == R.id.nav_guestList) {
             startActivity(new Intent(SeatGuestsActivity.this, GuestListActivity.class));
             finish();
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        }  else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
@@ -164,22 +176,130 @@ public class SeatGuestsActivity extends AppCompatActivity
                 constraints.connect(seats[i].getId(), ConstraintSet.BOTTOM, R.id.table, ConstraintSet.BOTTOM, 8);
             }
             constraints.applyTo(parentLayout);
+
+            addOnClickForSeat(i);
         }
+    }
+
+    public void addOnClickForSeat(final int i){
+        seats[i].setOnClickListener(new View.OnClickListener() {
+
+            int[] location = new int[2];
+
+            @Override
+            public void onClick(View view) {
+                if(!guestsSeated) {
+                    seats[i].getLocationInWindow(location);
+
+
+                    seats[i].setBackground(ResourceDrawer.getLtGrayCircle());
+                    showPopup(SeatGuestsActivity.this, location, i);
+                }
+                else
+                    Toast.makeText(SeatGuestsActivity.this, "score = " + tableSeats.getScore(i), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void seatGuests(View view) {
-        //// TODO: add algorithm
         Spinner algorithmSpinner = (Spinner) findViewById(R.id.chooseAlgoritmSpinner);
         String algorithmName = String.valueOf(algorithmSpinner.getSelectedItem());
 
-        TableArray tableSeats = guestList.advancedSort();
+
+
+        //if (algorithmName.equals("Basic Seating"))
+            //tableSeats = guestList.basicSeatingSort();
+        //else
+        tableSeats = guestList.advancedSort(tableSeats);
+        guestsSeated = true;
+
+        int totalScore = 0;
 
         for (int i = 0; i < guestList.size(); i++) {
             seats[i].setText(tableSeats.get(i).getName());
+
+            int score = tableSeats.getScore(i);
+            totalScore += score;
+            //System.out.println(score);
+
+            ((ShapeDrawable)seats[i].getBackground()).getPaint().setColor(Color.rgb((int)(255 - 11.25*score), (int)11.25*score, 0));
         }
+
+        TextView scoreTxt = (TextView) findViewById(R.id.totalScoreTxt);
+        double avgHappiness = totalScore /(2.0*guestList.size());
+        scoreTxt.setText("Score: " + avgHappiness);
+
+
 
 
     }
 
+
+    public void showPopup(Context context, int[] location, final int index){
+        int width = 450;
+        int height = 300;
+
+        // Inflate popup layout
+        LinearLayout viewGroup = (LinearLayout) findViewById(R.id.popupView);
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.neighbors_popup, viewGroup);
+
+        ListView listView = (ListView) layout.findViewById(R.id.neighborsList);
+        ListAdapter listAdapter = new ArrayAdapter<>(this, R.layout.list_item_guest, guestList);
+        listView.setAdapter(listAdapter);
+
+
+        layout.setBackgroundColor(Color.WHITE);
+
+        // Creating the PopupWindow
+        final PopupWindow popup = new PopupWindow(context);
+        popup.setContentView(layout);
+        popup.setWidth(width);
+        popup.setHeight(height);
+        popup.setFocusable(true);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Guest guest = guestList.get(position);
+
+                //if guest is seated elsewhere, move him
+                if (guest.isSeated()) {
+                    int i = tableSeats.getIndexOf(guest);
+                    seats[i].setText("-");
+                    tableSeats.setNull(i);
+                }
+
+                //remove whatever guest was here before
+                if (!seats[index].getText().equals("-"))
+                    guestList.get(seats[index].getText()+"").setIsSeated(false);
+
+                seats[index].setText(guest.getName());
+                guest.setIsSeated(true);
+
+                tableSeats.set(index, guest);
+                popup.dismiss();
+
+            }
+        });
+
+        popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                seats[index].setBackground(ResourceDrawer.getDkGrayCircle());
+            }
+        });
+
+
+
+        // Some offset to align the popup a bit to the right, and a bit down, relative to button's position.
+        int OFFSET_X = 30;
+        int OFFSET_Y = 30;
+
+
+        popup.showAtLocation(layout, Gravity.NO_GRAVITY, location[0] + OFFSET_X, location[1] + OFFSET_Y);
+
+    }
 
 }

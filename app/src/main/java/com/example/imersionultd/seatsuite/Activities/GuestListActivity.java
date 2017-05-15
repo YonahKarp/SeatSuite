@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -65,7 +64,7 @@ public class GuestListActivity extends AppCompatActivity
             guestList.add(new Guest("Levi", 31, true));
             guestList.add(new Guest("Sara", 23, false));
             guestList.add(new Guest("Rivka", 28, false));
-            guestList.add(new Guest("Rachel", 28, false));
+            guestList.add(new Guest("Rachel", 37, false));
 
             guestList.saveData(context, "guests");
         }
@@ -75,7 +74,7 @@ public class GuestListActivity extends AppCompatActivity
         listAdapterGuest = new ArrayAdapter<>(this, R.layout.list_item_guest, guestList);
 
         //SwipeMenuList view from API
-        SwipeMenuListView listView = (SwipeMenuListView) findViewById(R.id.guestList);
+        SwipeMenuListView listView = (SwipeMenuListView) findViewById(R.id.neighborsList);
         listView.setMenuCreator(createSwipeMenu());
         listView.setAdapter(listAdapterGuest);
 
@@ -94,11 +93,8 @@ public class GuestListActivity extends AppCompatActivity
 
                 intent.putExtras(bundle);
 
-
                 startActivity(intent);
                 finish();
-
-
             }
         });
 
@@ -154,15 +150,9 @@ public class GuestListActivity extends AppCompatActivity
         if (id == R.id.nav_seat) {
             startActivity(new Intent(GuestListActivity.this, SeatGuestsActivity.class));
             finish(); //
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 

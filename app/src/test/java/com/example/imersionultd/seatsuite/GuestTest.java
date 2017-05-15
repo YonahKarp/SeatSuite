@@ -41,7 +41,7 @@ public class GuestTest {
         list.add(joe);
 
 
-        System.out.println(steve.bid(bob, anna, tom));
+        System.out.println(steve.bid(list, bob, anna, tom));
 
         list.advancedSort();
 

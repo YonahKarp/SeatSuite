@@ -55,6 +55,16 @@ public class GuestListTest {
     }
 
     @Test
+    public void TestMostPicky() {
+        Guest ira = new Guest("ira", 75, true);
+        list.add(ira);
+
+        Guest mostPicky = list.getMostPickyGuest(true);
+
+        assertEquals(ira, mostPicky);
+    }
+
+    @Test
     public void SortingListByPreferenceWorks() {
         Guest joe = new Guest("joe", 50, true);
         Guest max = new Guest("max", 41, true);
@@ -67,7 +77,7 @@ public class GuestListTest {
 
         max.sortPreferencesByValue();
 
-        for (Map.Entry<Guest, Double> entry: max.preferenceList.entrySet()) {
+        for (Map.Entry<Integer, Double> entry: max.preferenceList.entrySet()) {
             System.out.println(entry.getKey() + " : " + entry.getValue());
         }
     }

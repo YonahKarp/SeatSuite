@@ -9,6 +9,7 @@
     <string name="title_activity_seat_guests">SeatGuestsActivity</string>
 
     <string-array name="Algorithms">
+        <item>Bidding Based Seating</item>
         <item>Basic Seating</item>
     </string-array>
 </resources>

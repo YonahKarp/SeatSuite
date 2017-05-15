@@ -93,7 +93,7 @@
         android:layout_height="250dp"
         android:layout_below="@+id/textView3"
         android:layout_alignStart="@+id/textView3"
-        android:id="@+id/guestList" />
+        android:id="@+id/neighborsList" />
 
     <Button
         android:text="Add Guest"
@@ -101,18 +101,18 @@
         android:layout_height="wrap_content"
         android:id="@+id/doneButton"
         android:onClick="goToGuestList"
-        android:layout_below="@+id/guestList"
+        android:layout_below="@+id/neighborsList"
         android:layout_marginTop="16dp"
-        android:layout_alignStart="@+id/guestList" />
+        android:layout_alignStart="@+id/neighborsList" />
 
     <Button
         android:id="@+id/autoGenBtn"
         android:onClick="recalculatePreferences"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Auto-Generate prefernces"
+        android:text="Auto-Generate preferences"
         android:textSize="10sp"
-        android:layout_above="@+id/guestList"
+        android:layout_above="@+id/neighborsList"
         android:layout_toEndOf="@+id/textView3"
         android:layout_below="@+id/genderSwitch" />
 

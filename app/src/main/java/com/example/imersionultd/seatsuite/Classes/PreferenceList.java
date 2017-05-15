@@ -8,12 +8,12 @@ import java.util.LinkedHashMap;
  * Created by YonahKarp on 3/22/17.
  */
 
-public class PreferenceList extends LinkedHashMap<Guest, Double> {
+public class PreferenceList extends LinkedHashMap<Integer, Double> {
     public PreferenceList(){
         super();
     }
 
-    public void add(Guest key) {
+    public void add(Integer key) {
         put(key, 5.0);
     }
 

@@ -8,6 +8,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -115,58 +118,37 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
         return false; //failure
     }
 
-    public GuestList basicSeatingSort(){
-        //choose least picky
-        Guest currGuest = getLeastPickyGuest();
+    public Guest getMostPickyGuest(boolean most){
+        int flip = -1;
 
-        //now we seat
-        GuestList seating = new GuestList();
-        seating.add(currGuest);
-        currGuest.isSeated = true;
+        if(most)
+            flip = 1;
 
-        //initial pass
-        while (seating.size() < size()){
-
-            Guest bestCandidate = currGuest.getBestAvailableCandidate();
-
-            seating.add(bestCandidate);
-            bestCandidate.isSeated = true;
-
-            currGuest = bestCandidate;
-        }
-        return seating;
-    }
-
-    private Guest getLeastPickyGuest(){
-        int lowestScore = Integer.MAX_VALUE;
-        Guest leastPickyGuest = null;
+        int bestScore = flip*Integer.MIN_VALUE;
+        Guest bestGuest = null;
 
         for (Guest guest: this) {
-            guest.isSeated = false; //set at beginning of sort algorithms
+            guest.setIsSeated(false); //set at beginning of sort algorithms
             int score = guest.pickyScore();
 
-            if (score < lowestScore) {
-                lowestScore = score;
-                leastPickyGuest = guest;
+            if (flip*score > flip*bestScore) {
+                bestScore = score;
+                bestGuest = guest;
             }
         }
-        return leastPickyGuest;
+        return bestGuest;
     }
 
-    public TableArray advancedSort(){
-        TableArray table = new TableArray(size());
-        Guest currGuest = getLeastPickyGuest();
-
-        table.set(0, currGuest);
-        currGuest.isSeated = true;
+    public TableArray advancedSort(TableArray table){
 
         Stack<Integer> seats = new Stack<>();
-        seats.push(1);
-        seats.push(table.getIndex(-1));
-
+        beginFill(table, seats);
 
         while (!seats.isEmpty()){
             int seatIndex = seats.pop();
+
+            if (table.get(seatIndex) != null)
+                continue;
 
             Guest highestBidder = highestBidder(table.get(seatIndex -1), table.get(table.acrossIndex(seatIndex)), table.get(seatIndex + 1));
 
@@ -174,14 +156,38 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
 
             int[] neighbors = {seatIndex + 1, seatIndex -1, table.acrossIndex(seatIndex)};
             for (int index: neighbors) {
-                if (table.get(index) == null && !seats.contains(index))
+                if (table.get(index) == null)
                     seats.push(index);
             }
         }
-
         return table;
-
     }
+
+    private void beginFill(TableArray table, Stack<Integer> seats){
+
+        boolean isEmpty = true;
+        //add all manually added guests
+        for (int i = 0; i < table.size(); i++) {
+            Guest tmpGuest = table.get(i);
+            if(tmpGuest != null){
+                isEmpty = false;
+                int[] neighbors = {i + 1, i -1, table.acrossIndex(i)};
+                for (int index: neighbors)
+                    if (table.get(index) == null)
+                        seats.push(index);
+            }
+        }
+
+        if (isEmpty) {
+            Guest currGuest = getMostPickyGuest(true);
+            table.set(0, currGuest);
+            currGuest.setIsSeated(true);
+
+            seats.push(1);
+            seats.push(table.getIndex(-1));
+        }
+    }
+
 
     private Guest highestBidder(Guest ... neighbors){
 
@@ -189,10 +195,10 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
         Guest highestBidder = null;
 
         for (Guest guest : this){
-            if(guest.isSeated)
+            if(guest.isSeated())
                 continue;
 
-            double bid = guest.bid(neighbors);
+            double bid = guest.bid(this, neighbors);
 
             if (bid > highestBid) {
                 highestBid = bid;
@@ -202,12 +208,6 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
         return highestBidder; 
     }
 
-    private boolean valueFoundInArray(Guest val, Guest ... neighbors){
-        for(Guest neighbor : neighbors)
-            if (neighbor.equals(val))
-                return true;
-        return false;
-    }
 
     private int getMaxId(){
         if (maxId == null){
@@ -217,8 +217,28 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
                     maxId = guest.getId();
         }
 
-        //note it also increments the max
         return ++maxId;
     }
-
 }
+
+//    public GuestList basicSeatingSort(){
+//        //choose least picky
+//        Guest currGuest = getMostPickyGuest(false);
+//
+//        //now we seat
+//        GuestList seating = new GuestList();
+//        seating.add(currGuest);
+//        currGuest.setIsSeated(true);
+//
+//        //initial pass
+//        while (seating.size() < size()){
+//
+//            Guest bestCandidate = currGuest.getBestAvailableCandidate(this);
+//
+//            seating.add(bestCandidate);
+//            bestCandidate.setIsSeated(true);
+//
+//            currGuest = bestCandidate;
+//        }
+//        return seating;
+//    }

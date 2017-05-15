@@ -10,6 +10,7 @@ import java.util.Collections;
 
 public class TableArray extends ArrayList<Guest>{
 
+    //todo: may remove across altogether
 
     int x[];
     private boolean isCircular = true;
@@ -31,9 +32,13 @@ public class TableArray extends ArrayList<Guest>{
     }
 
 
+    public void setNull(int index){
+        super.set(index, null);
+    }
+
     @Override
     public Guest set(int index, Guest guest) {
-        guest.isSeated = true;
+        guest.setIsSeated(true);
 
         Guest temp = get(index-1);
         if(temp != null) {
@@ -101,7 +106,38 @@ public class TableArray extends ArrayList<Guest>{
         return getIndex(-1 * index);
     }
 
+    public int getScore(int index){
+        Guest guest = get(index);
+        Guest[] neighbors = {get(index + 1), get(index -1), get(acrossIndex(index))};
 
+        int score = 0;
+        for (Guest neighbor: neighbors) {
+            if (guest.equals(neighbor)) //this roots out the 0 and 1/2 not having neighbors
+                score += 6; //neutral number so as not to ruin scoring
+
+            score += guest.getPreference(neighbor);
+        }
+
+        return score;
+    }
+
+    //inefficient methods needed because of nulls added upon creation
+    public int getIndexOf(Guest guest){
+        for (int i = 0; i < size(); i++)
+            if (get(i) != null && get(i).equals(guest))
+                return i;
+
+        return -1;
+    }
+
+    @Override
+    public boolean isEmpty(){
+        for (Guest guest: this)
+            if (guest != null)
+                return false;
+
+        return true;
+    }
 
 
 }

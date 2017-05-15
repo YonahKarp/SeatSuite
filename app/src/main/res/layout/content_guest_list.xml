@@ -14,7 +14,7 @@
     tools:showIn="@layout/app_bar_guest_list">
 
     <com.baoyz.swipemenulistview.SwipeMenuListView
-        android:id="@+id/guestList"
+        android:id="@+id/neighborsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
