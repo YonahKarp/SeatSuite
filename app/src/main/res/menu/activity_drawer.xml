@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_guestList"
+            android:icon="@drawable/ic_guest_list"
+            android:title="Guest List"
+            android:onClick="navigationHandler" />
+        <item
+            android:id="@+id/nav_seat"
+            android:icon="@drawable/ic_seat"
+            android:title="Seat Guests"
+            android:onClick="navigationHandler" />
+
+    </group>
+
+    <item android:title="Info">
+        <menu>
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_help"
+                android:title="Help"
+                android:onClick="navigationHandler" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_about"
+                android:title="About"
+                android:onClick="navigationHandler" />
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share"
+                android:onClick="navigationHandler" />
+        </menu>
+    </item>
+
+</menu>

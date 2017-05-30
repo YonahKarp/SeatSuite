@@ -3,5 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="10dp"
+    android:paddingStart="65dp"
+    android:fontFamily="casual"
+    android:textStyle="bold"
     android:textSize="20sp" >
 </TextView>

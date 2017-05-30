@@ -25,12 +25,15 @@
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="18dp"
+        android:layout_marginStart="39dp"
         android:id="@+id/nameTxt"
         android:hint="Name"
+        android:fontFamily="casual"
+        android:textStyle="bold"
         style="@style/Widget.AppCompat.EditText"
-        android:backgroundTint="@color/colorPrimary" />
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
 
     <TextView
@@ -41,7 +44,10 @@
         android:layout_alignBaseline="@+id/genderSwitch"
         android:layout_alignBottom="@+id/genderSwitch"
         android:layout_toEndOf="@+id/genderSwitch"
-        android:textSize="18sp" />
+        android:fontFamily="casual"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:onClick="setMaleFalse"/>
 
     <Switch
         android:layout_width="wrap_content"
@@ -55,7 +61,8 @@
         android:layout_below="@+id/ageTxt"
         android:layout_toEndOf="@+id/maleLabel"
         android:layout_marginTop="20dp"
-        android:paddingLeft="2px" />
+        android:paddingLeft="2px"
+        />
 
     <TextView
         android:text="Male"
@@ -65,7 +72,10 @@
         android:layout_alignBaseline="@+id/genderSwitch"
         android:layout_alignBottom="@+id/genderSwitch"
         android:layout_alignStart="@+id/ageTxt"
-        android:textSize="18sp" />
+        android:fontFamily="casual"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:onClick="setMaleTrue"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -73,48 +83,44 @@
         android:inputType="number"
         android:ems="10"
         android:layout_marginTop="14dp"
+        android:fontFamily="casual"
+        android:textStyle="bold"
         android:id="@+id/ageTxt"
         android:hint="Age"
         android:layout_below="@+id/nameTxt"
         android:layout_alignStart="@+id/nameTxt" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/maleLabel"
-        android:layout_below="@+id/genderSwitch"
-        android:layout_marginTop="16dp"
-        android:text="Preferences"
-        android:textSize="18sp" />
-
-    <ListView
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/prefToolbar"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_below="@+id/textView3"
-        android:layout_alignStart="@+id/textView3"
-        android:id="@+id/neighborsList" />
-
-    <Button
-        android:text="Add Guest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/doneButton"
-        android:onClick="goToGuestList"
-        android:layout_below="@+id/neighborsList"
-        android:layout_marginTop="16dp"
+        android:layout_height="40dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        android:layout_below="@+id/genderSwitch"
+        android:layout_marginTop="10dp"
         android:layout_alignStart="@+id/neighborsList" />
 
+    <ListView
+        android:id="@+id/neighborsList"
+        android:layout_width="wrap_content"
+        android:layout_height="270dp"
+        android:layout_alignStart="@+id/nameTxt"
+        android:layout_below="@+id/prefToolbar"
+        android:layout_marginEnd="0dp"
+        android:background="@color/yellow" />
+
     <Button
-        android:id="@+id/autoGenBtn"
-        android:onClick="recalculatePreferences"
+        android:id="@+id/doneButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Auto-Generate preferences"
-        android:textSize="10sp"
-        android:layout_above="@+id/neighborsList"
-        android:layout_toEndOf="@+id/textView3"
-        android:layout_below="@+id/genderSwitch" />
+        android:layout_alignStart="@+id/neighborsList"
+        android:layout_below="@+id/neighborsList"
+        android:layout_marginTop="16dp"
+        android:fontFamily="casual"
+        android:onClick="goToGuestList"
+        android:text="Done"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

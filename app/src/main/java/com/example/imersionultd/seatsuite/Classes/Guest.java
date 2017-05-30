@@ -51,7 +51,11 @@ public class Guest implements Comparable<Guest>, Serializable {
     public void setId(int id) { this.id = id;}
     public int getId() {return id;}
 
-    public void setIsSeated(boolean bool){seated = bool;}
+    public void setIsSeated(boolean bool){
+        seated = bool;
+        if (!seated)
+            connections = 0;
+    }
     public boolean isSeated() {return seated;}
 
     /**
@@ -196,11 +200,11 @@ public class Guest implements Comparable<Guest>, Serializable {
 
             double value = preferenceList.get(guest.id);
 
-            if(value == 10 && guest.connections == 2) //if there's only one seat left & there's a 10 we're not neighbors with
+            if(value == 10 && guest.connections == 1) //if there's only one seat left & there's a 10 we're not neighbors with
                 return -500;                        // then we are very uninterested in sitting next to anyone else
 
                                                     //if guest prefers others more, bid will be lowered
-            if (guest.connections < 3 && value > personalPrefs)
+            if (guest.connections < 2 && value > personalPrefs)
                 bid -= (value - personalPrefs) / 2;
             else                                    //but if guest has (many) others preferred less, bid will be upped
                 bid += (personalPrefs - value) / 2;

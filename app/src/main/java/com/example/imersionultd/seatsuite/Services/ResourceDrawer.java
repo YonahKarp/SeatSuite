@@ -19,7 +19,7 @@ public class ResourceDrawer {
 
 
     public static TextView getCircle(Context context) {
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+        //LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(120, 120);
 
         TextView textView = new TextView(context);
         //ImageView image = new ImageView(context);
@@ -38,8 +38,8 @@ public class ResourceDrawer {
 
     public static ShapeDrawable getDkGrayCircle() {
         ShapeDrawable dkGrayCircle = new ShapeDrawable(new OvalShape());
-        dkGrayCircle.setIntrinsicWidth(100);
-        dkGrayCircle.setIntrinsicHeight(100);
+        dkGrayCircle.setIntrinsicWidth(130);
+        dkGrayCircle.setIntrinsicHeight(130);
         dkGrayCircle.getPaint().setColor(Color.DKGRAY);
 
 
@@ -48,8 +48,8 @@ public class ResourceDrawer {
 
     public static ShapeDrawable getLtGrayCircle() {
         ShapeDrawable ltGrayCircle = new ShapeDrawable(new OvalShape());
-        ltGrayCircle.setIntrinsicWidth(100);
-        ltGrayCircle.setIntrinsicHeight(100);
+        ltGrayCircle.setIntrinsicWidth(130);
+        ltGrayCircle.setIntrinsicHeight(130);
         ltGrayCircle.getPaint().setColor(Color.LTGRAY);
 
         return ltGrayCircle;

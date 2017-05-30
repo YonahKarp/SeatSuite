@@ -1,10 +1,14 @@
 package com.example.imersionultd.seatsuite.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -84,8 +88,16 @@ public class PreferenceListAdapter extends BaseAdapter {
 
 
 
+        String[] fullName = list.get(i).getName().split(" ");
+        String name = fullName[0];
 
-        holder.nameTxt.setText(list.get(i).getName());
+        if (fullName.length > 1)
+            name += " " + fullName[fullName.length-1].substring(0,1);
+
+        if (name.length() > 9)
+            name = name.substring(0, 5) + ".." + name.charAt(name.length() - 1);
+
+        holder.nameTxt.setText(name + "");
 
         int tmp = (int)currGuest.getPreference(list.get(i));
         holder.seekBar.setProgress(tmp);
@@ -106,24 +118,49 @@ public class PreferenceListAdapter extends BaseAdapter {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                hideKeyboard(seekBar);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                currGuest.setPreference(list.get(iTmp),(double)seekBar.getProgress());
-            }
-        });
+                int curr10s = 0;
+                int other10s = 0;
+                Guest otherGuest = list.get(iTmp);
 
+                if(seekBar.getProgress() == 10) //don't allow more than 2 10s
+                    if(currGuest.getPreference(otherGuest) != 10) {
+                        for (double d : currGuest.preferenceList.values())
+                            if (d == 10.0)
+                                curr10s++;
 
-        rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(context, "You Clicked "+list.get(i), Toast.LENGTH_SHORT).show();
+                        for (double d : otherGuest.preferenceList.values())
+                            if (d == 10.0)
+                                other10s++;
+                    }
+
+                if (curr10s >= 2) {
+                    show10Alert(currGuest.getName());
+                    seekBar.setProgress((int)currGuest.getPreference(otherGuest));
+                }else if(other10s >= 2){
+                    show10Alert(otherGuest.getName());
+                    seekBar.setProgress((int)currGuest.getPreference(otherGuest));
+                }
+                else
+                    currGuest.setPreference(list.get(iTmp),(double)seekBar.getProgress());
             }
         });
 
         return rowView;
+    }
+
+    private void show10Alert(String name){
+        new AlertDialog.Builder(context)
+                .setTitle("Could Not Set")
+                .setMessage(name + " already has 2 other guests he/she must sit next to")
+                .setIcon(R.drawable.ic_warning)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {}
+                }).show();
     }
 
     private String getEmote(int val){
@@ -154,6 +191,9 @@ public class PreferenceListAdapter extends BaseAdapter {
                 return "?";
 
         }
+    }public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

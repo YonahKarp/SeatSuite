@@ -5,11 +5,57 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_add_guest">AddGuestActivity</string>
-    <string name="title_activity_seat_guests">SeatGuestsActivity</string>
+    <string name="title_activity_add_guest">Edit Guest</string>
+    <string name="title_activity_seat_guests">Seat Guests</string>
 
     <string-array name="Algorithms">
         <item>Bidding Based Seating</item>
         <item>Basic Seating</item>
     </string-array>
+    <string name="title_activity_about">About</string>
+
+    <string name="about">
+        Hosting an event? \n
+        Have picky guests and cannot figure out how to seat them? \n
+        <i>No problem!</i> \n\n
+        Seat Suite uses advanced algorithms to keep all of your guests happy.\n\n
+        Just add your guests, set their seating preferences, and click go!\n\n
+        It is that simple. The perfect seating arrangement is generated just for your event.\n
+        An event with just fourteen guests has over 87 BILLION possible seating arrangements.\n
+
+        So drop the pen and paper and let Seat Suite do all of the work for you! \n\n
+        In just five minutes you will have the perfect seating plan so you can focus on having fun at your party.\n\n
+        But don\'t just take our word for it- try it out and see for yourself! \n
+        Happy guests make happy hosts, so here\'s to a great party, thrown by you!\n
+    </string>
+    <string name="title_activity_help">Help</string>
+
+    <string name="helpTitle"><u>Help</u></string>
+    <string name="helpWelcome">Welcome to Seat Suite. Lets help you get started!</string>
+
+    <string name="helpTitle1"><u>Guest List:</u></string>
+    <string name="help1sub">Here is where you can view all the guests you\'ve added </string>
+    <string name="help1_1">- To add a guest, tap the + icon at the top right.</string>
+    <string name="help1_2">- To delete a guest, slide their name left and tap delete.</string>
+    <string name="help1_3">- To edit a guest, tap their name</string>
+    <string name="help1_4">- To delete <i>all</i> guests, tap the trash icon on the toolbar</string>
+
+    <string name="helpTitle2"><u>Add/Edit Guest:</u></string>
+    <string name="help2sub">Here is where you can add a new guest, or edit an existing one </string>
+    <string name="help2_1">- Set the user\'s name and age in the provided fields</string>
+    <string name="help2_2">- Tip: After setting your guests age, try using the <i>auto-generate preferences feature</i> at the top right of the preference list</string>
+    <string name="help2_3">- Move the sliders to set your guest\'s preferences</string>
+    <string name="help2_4">- Tip: The red symbol will ensure guest A won\'t sit next to guest B</string>
+    <string name="help2_5">- Tip: The star will ensure guest A <i>will</i> sit next to guest B</string>
+
+    <string name="helpTitle3"><u>Seat Guests:</u></string>
+    <string name="help3sub">Here is where the magic happens! Let\'s seat your guests </string>
+    <string name="help3_1">- Simply tap <i>Go!</i> to generate the perfect seating arrangement</string>
+    <string name="help3_2">- OR you can tap a seat to set who should sit there. Set as many as you want, then tap <i>Go!</i> </string>
+    <string name="help3_3">- You can clear your selection by tapping the <i>Clear</i> button (same as go)</string>
+    <string name="help3_4">- Tapping a seatted guest will tell you how happy they are with their neighbors, on a scale of 0 to 20</string>
+
+    <string name="helpLuck">Good Luck and enjoy the party!</string>
+
+
 </resources>

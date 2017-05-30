@@ -52,15 +52,15 @@ public class TableArray extends ArrayList<Guest>{
             temp.connections += 1;
         }
 
-        temp = get(acrossIndex(index));
-        if (temp != null) {
-            guest.connections += 1;
-            temp.connections += 1;
-        }
-
-        //ensure that both heads hide their "3rd connection" (as they're only allowed 2 irl)
-        if(index == 0 || (index == tableSize / 2 && tableSize % 2 == 0))
-            guest.connections += 1;
+//        temp = get(acrossIndex(index));
+//        if (temp != null) {
+//            guest.connections += 1;
+//            temp.connections += 1;
+//        }
+//
+//        //ensure that both heads hide their "3rd connection" (as they're only allowed 2 irl)
+//        if(index == 0 || (index == tableSize / 2 && tableSize % 2 == 0))
+//            guest.connections += 1;
 
 
         int trueIndex = getIndex(index);
@@ -108,7 +108,9 @@ public class TableArray extends ArrayList<Guest>{
 
     public int getScore(int index){
         Guest guest = get(index);
-        Guest[] neighbors = {get(index + 1), get(index -1), get(acrossIndex(index))};
+        Guest[] neighbors = {get(index + 1), get(index -1)
+                //, get(acrossIndex(index))
+        };
 
         int score = 0;
         for (Guest neighbor: neighbors) {
@@ -137,6 +139,13 @@ public class TableArray extends ArrayList<Guest>{
                 return false;
 
         return true;
+    }
+
+
+    public void empty(){
+        for (int i = 0; i < size(); i++) {
+            super.set(i, null);
+        }
     }
 
 

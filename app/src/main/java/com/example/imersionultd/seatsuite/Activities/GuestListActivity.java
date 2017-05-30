@@ -1,10 +1,13 @@
 package com.example.imersionultd.seatsuite.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
@@ -24,9 +29,9 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.imersionultd.seatsuite.Classes.Guest;
 import com.example.imersionultd.seatsuite.Classes.GuestList;
 import com.example.imersionultd.seatsuite.R;
+import com.example.imersionultd.seatsuite.Services.NavDrawerHelper;
 
-public class GuestListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class GuestListActivity extends AppCompatActivity {
 
     //todo add nice frame around list,
         //with number of guests on top
@@ -40,9 +45,18 @@ public class GuestListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
         setContentView(R.layout.activity_guest_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Toolbar notepadBar = (Toolbar) findViewById(R.id.listToolBar);
+        notepadBar.setTitle("My Guests:");
+        notepadBar.inflateMenu (R.menu.guest_list);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -50,23 +64,13 @@ public class GuestListActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-
         /*
          * Set up listView w/ delete functionality
          */
         if(!guestList.loadData(this,"guests") || guestList.size() == 0){
-            guestList.add(new Guest("Reuven", 20, true));
-            guestList.add(new Guest("Shimon", 25, true));
-            guestList.add(new Guest("Levi", 31, true));
-            guestList.add(new Guest("Sara", 23, false));
-            guestList.add(new Guest("Rivka", 28, false));
-            guestList.add(new Guest("Rachel", 37, false));
 
-            guestList.saveData(context, "guests");
+            addDefualtGuests();
+
         }
 
 
@@ -74,9 +78,16 @@ public class GuestListActivity extends AppCompatActivity
         listAdapterGuest = new ArrayAdapter<>(this, R.layout.list_item_guest, guestList);
 
         //SwipeMenuList view from API
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int height = displayMetrics.heightPixels;
+
+
         SwipeMenuListView listView = (SwipeMenuListView) findViewById(R.id.neighborsList);
         listView.setMenuCreator(createSwipeMenu());
         listView.setAdapter(listAdapterGuest);
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = (int)(height * .65);
+        listView.setLayoutParams(params);
 
 
         //onClick of individual item
@@ -103,11 +114,8 @@ public class GuestListActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 guestList.remove(position);
-
                 guestList.saveData(context, "guests"); //saves changes in memory
-
                 listAdapterGuest.notifyDataSetChanged(); //updates list
-
                 return true; //removes swipeView from screen
             }
         });
@@ -127,7 +135,7 @@ public class GuestListActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.guest_list, menu);
+        //getMenuInflater().inflate(R.menu.guest_list, menu);
         return true;
     }
 
@@ -141,31 +149,30 @@ public class GuestListActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_seat) {
-            startActivity(new Intent(GuestListActivity.this, SeatGuestsActivity.class));
-            finish(); //
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public void navigationHandler(MenuItem item){
+        NavDrawerHelper navHelper = new NavDrawerHelper(this);
+        String tag = item.getTitle().toString();
+        navHelper.navigationItemSelected(tag);
     }
 
     public void addGuest(MenuItem item){
-
         Intent intent = new Intent(GuestListActivity.this, AddGuestActivity.class);
-
         startActivity(intent);
+    }
+
+    public void deleteAll(MenuItem item){
+        new AlertDialog.Builder(this)
+                .setTitle("Warning")
+                .setMessage("Do you really want to delete all guests?")
+                .setIcon(R.drawable.ic_warning)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        guestList.clear();
+                        guestList.saveData(context, "guests"); //saves changes in memory
+                        listAdapterGuest.notifyDataSetChanged(); //updates list
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
     }
 
     //from API
@@ -182,5 +189,87 @@ public class GuestListActivity extends AppCompatActivity
                 menu.addMenuItem(deleteItem);
             }
         };
+    }
+
+    private void addDefualtGuests(){
+
+        Guest george = new Guest("George Washington", 52, true);
+        Guest lincoln = new Guest("Abraham Lincoln", 41, true);
+        Guest bill = new Guest("Bill Clinton", 40, true);
+        Guest hillary= new Guest("Hillary Clinton", 37, false);
+        Guest gBush=new Guest("George Bush", 40, true);
+        Guest lBush=new Guest("Laura Bush", 40, false);
+        Guest trump= new Guest("Donald Trump", 50, true);
+        Guest melania= new Guest("Melania Trump", 40, false);
+        Guest obama= new Guest("Barak Obama", 42, true);
+        Guest mrsbama= new Guest("Michelle Obama", 40, false);
+
+        guestList.add(george);
+        guestList.add(lincoln);
+        guestList.add(bill);
+        guestList.add(hillary);
+        guestList.add(gBush);
+        guestList.add(lBush);
+        guestList.add(trump);
+        guestList.add(melania);
+        guestList.add(obama);
+        guestList.add(mrsbama);
+
+        george.setPreference(lincoln, 8.0);
+        george.setPreference(bill, 6.0);
+        george.setPreference(hillary, 6.0);
+        george.setPreference(gBush, 7.0);
+        george.setPreference(lBush, 7.0);
+        george.setPreference(trump, 6.0);
+        george.setPreference(melania, 6.0);
+        george.setPreference(obama, 7.0);
+        george.setPreference(mrsbama, 7.0);
+
+        lincoln.setPreference(bill, 7.0);
+        lincoln.setPreference(hillary, 7.0);
+        lincoln.setPreference(gBush, 6.0);
+        lincoln.setPreference(lBush, 6.0);
+        lincoln.setPreference(trump, 7.0);
+        lincoln.setPreference(melania, 7.0);
+        lincoln.setPreference(obama, 6.0);
+        lincoln.setPreference(mrsbama, 6.0);
+
+        bill.setPreference(hillary, 10.0);
+        bill.setPreference(gBush, 6.0);
+        bill.setPreference(lBush, 6.0);
+        bill.setPreference(trump, 2.0);
+        bill.setPreference(melania, 2.0);
+        bill.setPreference(obama, 9.0);
+        bill.setPreference(mrsbama, 9.0);
+
+        hillary.setPreference(gBush, 5.0);
+        hillary.setPreference(lBush, 6.0);
+        hillary.setPreference(trump, 0.0);
+        hillary.setPreference(melania, 1.0);
+        hillary.setPreference(obama, 9.0);
+        hillary.setPreference(mrsbama, 10.0);
+
+        gBush.setPreference(lBush, 10.0);
+        gBush.setPreference(trump, 8.0);
+        gBush.setPreference(melania, 8.0);
+        gBush.setPreference(obama, 5.0);
+        gBush.setPreference(mrsbama, 5.0);
+
+        lBush.setPreference(trump, 7.0);
+        lBush.setPreference(melania, 8.0);
+        lBush.setPreference(obama, 5.0);
+        lBush.setPreference(mrsbama, 6.0);
+
+        trump.setPreference(melania, 10.0);
+        trump.setPreference(obama, 0.0);
+        trump.setPreference(mrsbama, 0.0);
+
+        melania.setPreference(obama, 1.0);
+        melania.setPreference(mrsbama, 2.0);
+
+        obama.setPreference(mrsbama, 10.0);
+
+
+        guestList.saveData(context, "guests");
     }
 }

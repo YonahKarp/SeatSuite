@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -24,21 +28,30 @@ public class AddGuestActivity extends AppCompatActivity {
     private boolean isEdit = false;
 
     private Guest currGuest;
+    private Switch gender;
 
     private PreferenceListAdapter preferenceListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_add_guest);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Toolbar notepadBar = (Toolbar) findViewById(R.id.prefToolbar);
+        notepadBar.setTitle("Preferences");
+        notepadBar.inflateMenu (R.menu.menu_preflist);
 
         this.setTitle("Edit Guest");
 
         final EditText name = ((EditText) findViewById(R.id.nameTxt));
         final EditText age = ((EditText) findViewById(R.id.ageTxt));
-        Switch gender = ((Switch) findViewById(R.id.genderSwitch));
+        gender = ((Switch) findViewById(R.id.genderSwitch));
 
         guestList.loadData(this,"guests");
         currGuest = new Guest("",30, true);
@@ -57,8 +70,8 @@ public class AddGuestActivity extends AppCompatActivity {
             age.setText(currGuest.getAge() + "");
             gender.setChecked(!currGuest.isMale());
 
-            Button doneButton = ((Button) findViewById(R.id.doneButton));
-            doneButton.setText("Done");
+//            Button doneButton = ((Button) findViewById(R.id.doneButton));
+//            doneButton.setText("Done");
         }
 
         name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -72,14 +85,25 @@ public class AddGuestActivity extends AppCompatActivity {
             }
         });
 
+        age.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(validateAge())
+                    currGuest.setAge(Integer.parseInt(age.getText().toString()));
+            }
+        });
+
         age.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus) {
+                if (!hasFocus)
                     hideKeyboard(view);
-                    if(validateAge())
-                        currGuest.setAge(Integer.parseInt(age.getText().toString()));
-                }
             }
         });
 
@@ -145,9 +169,19 @@ public class AddGuestActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public void recalculatePreferences(View view){
+    public void recalculatePreferences(MenuItem item){
         currGuest.recalculateChanges(guestList);
         preferenceListAdapter.notifyDataSetChanged();
+    }
+
+    public void setMaleTrue(View v) {
+        currGuest.setMale(true);
+        gender.setChecked(false);
+    }
+
+    public void setMaleFalse(View v) {
+        currGuest.setMale(false);
+        gender.setChecked(true);
     }
 
     public boolean validateName(){

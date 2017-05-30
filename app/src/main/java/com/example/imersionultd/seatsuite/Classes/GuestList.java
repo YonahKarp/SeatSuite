@@ -7,11 +7,10 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+
+import java.util.Deque;
 import java.util.Stack;
 
 /**
@@ -118,6 +117,11 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
         return false; //failure
     }
 
+    public void unseatAllGuests(){
+        for (Guest guest: this)
+            guest.setIsSeated(false); //set at beginning of sort algorithms
+    }
+
     public Guest getMostPickyGuest(boolean most){
         int flip = -1;
 
@@ -127,8 +131,8 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
         int bestScore = flip*Integer.MIN_VALUE;
         Guest bestGuest = null;
 
+        unseatAllGuests();
         for (Guest guest: this) {
-            guest.setIsSeated(false); //set at beginning of sort algorithms
             int score = guest.pickyScore();
 
             if (flip*score > flip*bestScore) {
@@ -141,29 +145,33 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
 
     public TableArray advancedSort(TableArray table){
 
-        Stack<Integer> seats = new Stack<>();
+        ArrayDeque<Integer> seats = new ArrayDeque<>();
         beginFill(table, seats);
 
         while (!seats.isEmpty()){
-            int seatIndex = seats.pop();
+            int seatIndex = seats.poll();
 
             if (table.get(seatIndex) != null)
                 continue;
 
-            Guest highestBidder = highestBidder(table.get(seatIndex -1), table.get(table.acrossIndex(seatIndex)), table.get(seatIndex + 1));
+            Guest highestBidder = highestBidder(table.get(seatIndex -1)
+                    //, table.get(table.acrossIndex(seatIndex))
+                    , table.get(seatIndex + 1));
 
             table.set(seatIndex, highestBidder);
 
-            int[] neighbors = {seatIndex + 1, seatIndex -1, table.acrossIndex(seatIndex)};
+            int[] neighbors = {seatIndex + 1, seatIndex -1
+                    //, table.acrossIndex(seatIndex)
+            };
             for (int index: neighbors) {
                 if (table.get(index) == null)
-                    seats.push(index);
+                    seats.offer(index);
             }
         }
         return table;
     }
 
-    private void beginFill(TableArray table, Stack<Integer> seats){
+    private void beginFill(TableArray table, ArrayDeque<Integer> seats){
 
         boolean isEmpty = true;
         //add all manually added guests
@@ -171,10 +179,12 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
             Guest tmpGuest = table.get(i);
             if(tmpGuest != null){
                 isEmpty = false;
-                int[] neighbors = {i + 1, i -1, table.acrossIndex(i)};
+                int[] neighbors = {i + 1, i -1
+                        //, table.acrossIndex(i)
+                };
                 for (int index: neighbors)
                     if (table.get(index) == null)
-                        seats.push(index);
+                        seats.offer(index);
             }
         }
 
@@ -183,8 +193,8 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
             table.set(0, currGuest);
             currGuest.setIsSeated(true);
 
-            seats.push(1);
-            seats.push(table.getIndex(-1));
+            seats.offer(1);
+            seats.offer(table.getIndex(-1));
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.imersionultd.seatsuite.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,6 +12,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -38,20 +41,19 @@ import com.example.imersionultd.seatsuite.Classes.Guest;
 import com.example.imersionultd.seatsuite.Classes.GuestList;
 import com.example.imersionultd.seatsuite.Classes.TableArray;
 import com.example.imersionultd.seatsuite.R;
+import com.example.imersionultd.seatsuite.Services.NavDrawerHelper;
 import com.example.imersionultd.seatsuite.Services.ResourceDrawer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class SeatGuestsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class SeatGuestsActivity extends AppCompatActivity {
 
     private TableArray tableSeats;
     private GuestList guestList = new GuestList();
     private TextView[] seats;
     private boolean noGuests = false;
     private boolean guestsSeated = false;
-
 
 
     @Override
@@ -67,21 +69,12 @@ public class SeatGuestsActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
         if(!guestList.loadData(this, "guests")|| guestList.isEmpty())
             findViewById(R.id.goBtn).setEnabled(false);
-
 
         tableSeats = new TableArray(guestList.size());
         seats = new TextView[guestList.size()];
         drawSeats();
-        //todo setTapListeners(seats);
-
-
-
     }
 
     @Override
@@ -103,35 +96,15 @@ public class SeatGuestsActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-
-
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_guestList) {
-            startActivity(new Intent(SeatGuestsActivity.this, GuestListActivity.class));
-            finish();
-        }  else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public void navigationHandler(MenuItem item){
+        NavDrawerHelper navHelper = new NavDrawerHelper(this);
+        String tag = item.getTitle().toString();
+        navHelper.navigationItemSelected(tag);
     }
 
     public void drawSeats(){
@@ -141,10 +114,10 @@ public class SeatGuestsActivity extends AppCompatActivity
 
         int seatWidth;
         if (seats.length >= 3)
-            seatWidth = ((ImageView)findViewById(R.id.table)).getDrawable().getIntrinsicWidth() /
+            seatWidth = ((ImageView)findViewById(R.id.table)).getDrawable().getIntrinsicHeight() /
                     (int) Math.ceil((seats.length - 2)/2.0);
         else
-            seatWidth = ((ImageView)findViewById(R.id.table)).getDrawable().getIntrinsicWidth();
+            seatWidth = ((ImageView)findViewById(R.id.table)).getDrawable().getIntrinsicHeight();
 
         double mid = seats.length / 2.0;
         for (int i = 0; i < seats.length; i++){
@@ -160,20 +133,20 @@ public class SeatGuestsActivity extends AppCompatActivity
             int adjust = (int)Math.ceil(seats.length / 2.0);
 
             if(i == 0){
-                constraints.connect(seats[i].getId(),ConstraintSet.END, R.id.table, ConstraintSet.START, 15);
-                constraints.connect(seats[i].getId(), ConstraintSet.TOP, R.id.table, ConstraintSet.TOP, 8);
-                constraints.connect(seats[i].getId(), ConstraintSet.BOTTOM, R.id.table, ConstraintSet.BOTTOM, 8);
-            }else if(i < mid){ // lower half of table
-                constraints.connect(seats[i].getId(),ConstraintSet.START, R.id.table, ConstraintSet.START, (i-1) * seatWidth + (seatWidth / adjust));
-                constraints.connect(seats[i].getId(), ConstraintSet.TOP, R.id.table, ConstraintSet.BOTTOM, 8);
+                constraints.connect(seats[i].getId(),ConstraintSet.BOTTOM, R.id.table, ConstraintSet.TOP, 15);
+                constraints.connect(seats[i].getId(), ConstraintSet.START, R.id.table, ConstraintSet.START, 8);
+                constraints.connect(seats[i].getId(), ConstraintSet.END, R.id.table, ConstraintSet.END, 8);
+            }else if(i < mid){ // left side of table
+                constraints.connect(seats[i].getId(),ConstraintSet.TOP, R.id.table, ConstraintSet.TOP, (i-1) * seatWidth + (seatWidth / adjust));
+                constraints.connect(seats[i].getId(), ConstraintSet.END, R.id.table, ConstraintSet.START, 8);
             }else if(i > mid){ // upper half of table
-                constraints.connect(seats[i].getId(),ConstraintSet.START, R.id.table, ConstraintSet.START, (((int)mid - (int)(i - mid) -1) * seatWidth + (seatWidth / adjust)));
-                constraints.connect(seats[i].getId(), ConstraintSet.BOTTOM, R.id.table, ConstraintSet.TOP, 8);
+                constraints.connect(seats[i].getId(),ConstraintSet.TOP, R.id.table, ConstraintSet.TOP, (((int)mid - (int)(i - mid) -1) * seatWidth + (seatWidth / adjust)));
+                constraints.connect(seats[i].getId(), ConstraintSet.START, R.id.table, ConstraintSet.END, 8);
             }else if(i == mid){ //always false when length is odd
 
-                constraints.connect(seats[i].getId(),ConstraintSet.START, R.id.table, ConstraintSet.END, 15);
-                constraints.connect(seats[i].getId(), ConstraintSet.TOP, R.id.table, ConstraintSet.TOP, 8);
-                constraints.connect(seats[i].getId(), ConstraintSet.BOTTOM, R.id.table, ConstraintSet.BOTTOM, 8);
+                constraints.connect(seats[i].getId(),ConstraintSet.TOP, R.id.table, ConstraintSet.BOTTOM, 15);
+                constraints.connect(seats[i].getId(), ConstraintSet.START, R.id.table, ConstraintSet.START, 8);
+                constraints.connect(seats[i].getId(), ConstraintSet.END, R.id.table, ConstraintSet.END, 8);
             }
             constraints.applyTo(parentLayout);
 
@@ -201,22 +174,31 @@ public class SeatGuestsActivity extends AppCompatActivity
         });
     }
 
-    public void seatGuests(View view) {
-        Spinner algorithmSpinner = (Spinner) findViewById(R.id.chooseAlgoritmSpinner);
-        String algorithmName = String.valueOf(algorithmSpinner.getSelectedItem());
+    public void buttonClicked(View view){
+        if(!guestsSeated) {
+            seatGuests(); //// TODO: 5/26/17 remove view
+            ((Button) view).setText("Clear");
+        }
+        else {
+            clearTable();
+            ((Button) view).setText("Go!");
+        }
+    }
 
 
+    public void seatGuests() {
 
-        //if (algorithmName.equals("Basic Seating"))
-            //tableSeats = guestList.basicSeatingSort();
-        //else
         tableSeats = guestList.advancedSort(tableSeats);
         guestsSeated = true;
 
         int totalScore = 0;
 
         for (int i = 0; i < guestList.size(); i++) {
-            seats[i].setText(tableSeats.get(i).getName());
+
+            String name = shortenName(tableSeats.get(i).getName());
+
+
+            seats[i].setText(name + "");
 
             int score = tableSeats.getScore(i);
             totalScore += score;
@@ -225,15 +207,20 @@ public class SeatGuestsActivity extends AppCompatActivity
             ((ShapeDrawable)seats[i].getBackground()).getPaint().setColor(Color.rgb((int)(255 - 11.25*score), (int)11.25*score, 0));
         }
 
-        TextView scoreTxt = (TextView) findViewById(R.id.totalScoreTxt);
-        double avgHappiness = totalScore /(2.0*guestList.size());
-        scoreTxt.setText("Score: " + avgHappiness);
-
-
-
-
+        //TextView scoreTxt = (TextView) findViewById(R.id.totalScoreTxt);
+        //double avgHappiness = totalScore /(2.0*guestList.size());
+        //scoreTxt.setText("Score: " + avgHappiness);
     }
 
+    private void clearTable(){
+        tableSeats.empty();
+        guestList.unseatAllGuests();
+        for (TextView seat : seats){
+            seat.setText("-");
+            seat.setBackground(ResourceDrawer.getDkGrayCircle());
+        }
+        guestsSeated = false;
+    }
 
     public void showPopup(Context context, int[] location, final int index){
         int width = 450;
@@ -245,7 +232,7 @@ public class SeatGuestsActivity extends AppCompatActivity
         View layout = layoutInflater.inflate(R.layout.neighbors_popup, viewGroup);
 
         ListView listView = (ListView) layout.findViewById(R.id.neighborsList);
-        ListAdapter listAdapter = new ArrayAdapter<>(this, R.layout.list_item_guest, guestList);
+        ListAdapter listAdapter = new ArrayAdapter<>(this, R.layout.list_item_guest_noindent, guestList);
         listView.setAdapter(listAdapter);
 
 
@@ -274,7 +261,9 @@ public class SeatGuestsActivity extends AppCompatActivity
                 if (!seats[index].getText().equals("-"))
                     guestList.get(seats[index].getText()+"").setIsSeated(false);
 
-                seats[index].setText(guest.getName());
+                String name = guest.getName();
+
+                seats[index].setText(name);
                 guest.setIsSeated(true);
 
                 tableSeats.set(index, guest);
@@ -286,20 +275,38 @@ public class SeatGuestsActivity extends AppCompatActivity
         popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-
                 seats[index].setBackground(ResourceDrawer.getDkGrayCircle());
             }
         });
-
-
 
         // Some offset to align the popup a bit to the right, and a bit down, relative to button's position.
         int OFFSET_X = 30;
         int OFFSET_Y = 30;
 
-
         popup.showAtLocation(layout, Gravity.NO_GRAVITY, location[0] + OFFSET_X, location[1] + OFFSET_Y);
+    }
 
+    public void showHelpPopup(MenuItem item){
+        new AlertDialog.Builder(this)
+                .setTitle("Help")
+                .setMessage( "Simply tap \'Go!\' to generate the perfect seating arrangement \n\n OR you can tap a seat to set who should sit there. Set as many as you want, then tap \'Go!\'" )
+                .setIcon(R.drawable.ic_help)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {}
+                }).show();
+    }
+
+    private String shortenName(String name){
+        String[] fullName = name.split(" ");
+        name = fullName[0];
+
+        if (fullName.length > 1)
+            name += " " + fullName[fullName.length-1].substring(0,1);
+
+        if (name.length() > 9)
+            name = name.substring(0, 5) + ".." + name.charAt(name.length() - 1);
+
+        return name;
     }
 
 }
