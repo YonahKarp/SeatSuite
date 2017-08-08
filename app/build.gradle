@@ -4,11 +4,11 @@ android {
     compileSdkVersion 24
     buildToolsVersion '25.0.0'
     defaultConfig {
-        applicationId "com.example.imersionultd.seatsuite"
+        applicationId "com.imersionultd.seatsuite"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

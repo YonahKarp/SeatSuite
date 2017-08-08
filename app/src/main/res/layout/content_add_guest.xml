@@ -15,18 +15,18 @@
     android:focusableInTouchMode="true"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.imersionultd.seatsuite.Activities.AddGuestActivity"
+    tools:context="com.imersionultd.seatsuite.Activities.AddGuestActivity"
     tools:showIn="@layout/activity_add_guest">
 
     <!-- clickable & focusable added above for keyboard dismissal-->
 
     <EditText
+        android:id="@+id/nameTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
         android:layout_marginStart="39dp"
-        android:id="@+id/nameTxt"
         android:hint="Name"
         android:fontFamily="casual"
         android:textStyle="bold"
@@ -36,60 +36,6 @@
         android:layout_alignParentStart="true" />
 
 
-    <TextView
-        android:text="Female"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/FemaleLabel"
-        android:layout_alignBaseline="@+id/genderSwitch"
-        android:layout_alignBottom="@+id/genderSwitch"
-        android:layout_toEndOf="@+id/genderSwitch"
-        android:fontFamily="casual"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:onClick="setMaleFalse"/>
-
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/genderSwitch"
-        android:textOn="Female  "
-        android:splitTrack="false"
-        android:textOff="Male"
-        android:checked="false"
-        android:switchTextAppearance="@style/TextAppearance.AppCompat.Widget.Switch"
-        android:layout_below="@+id/ageTxt"
-        android:layout_toEndOf="@+id/maleLabel"
-        android:layout_marginTop="20dp"
-        android:paddingLeft="2px"
-        />
-
-    <TextView
-        android:text="Male"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/maleLabel"
-        android:layout_alignBaseline="@+id/genderSwitch"
-        android:layout_alignBottom="@+id/genderSwitch"
-        android:layout_alignStart="@+id/ageTxt"
-        android:fontFamily="casual"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:onClick="setMaleTrue"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:layout_marginTop="14dp"
-        android:fontFamily="casual"
-        android:textStyle="bold"
-        android:id="@+id/ageTxt"
-        android:hint="Age"
-        android:layout_below="@+id/nameTxt"
-        android:layout_alignStart="@+id/nameTxt" />
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/prefToolbar"
         android:layout_width="match_parent"
@@ -97,14 +43,14 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        android:layout_below="@+id/genderSwitch"
+        android:layout_below="@+id/nameTxt"
         android:layout_marginTop="10dp"
         android:layout_alignStart="@+id/neighborsList" />
 
     <ListView
         android:id="@+id/neighborsList"
         android:layout_width="wrap_content"
-        android:layout_height="270dp"
+        android:layout_height="315dp"
         android:layout_alignStart="@+id/nameTxt"
         android:layout_below="@+id/prefToolbar"
         android:layout_marginEnd="0dp"
