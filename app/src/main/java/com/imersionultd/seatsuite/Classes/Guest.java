@@ -17,24 +17,21 @@ public class Guest implements Comparable<Guest>, Serializable {
     private Integer id; //id is used for identifying guest so preferences will remain even if name is changed
 
     private String name;
-    //private int age;
-    //private boolean male; //gender
+    private String group;
     private boolean seated = false;
 
     int connections = 0;
 
     public PreferenceList preferenceList = new PreferenceList();
 
-
-//    public Guest(String name, int age, boolean male){
-//        this.name = name;
-//        this.age = age;
-//        this.male = male;
-//    }
-
-    public Guest(String name){
+    public Guest(String name, String group){
         this.name = name;
+        this.group = group;
     }
+
+//    public Guest(String name){
+//        this.name = name;
+//    }
 
     /**
      * Getters and setters
@@ -42,11 +39,8 @@ public class Guest implements Comparable<Guest>, Serializable {
     public String getName() {return name;}
     public void setName(String name) { this.name = name;}
 
-//    public int getAge() {return age;}
-//    public void setAge(int age) {this.age = age;}
-//
-//    public boolean isMale() {return male;}
-//    public void setMale(boolean male) { this.male = male;}
+    public String getGroup() {return group;}
+    public void setGroup(String group) { this.group = group;}
 
     public void setId(int id) { this.id = id;}
     public int getId() {return id;}
@@ -83,23 +77,19 @@ public class Guest implements Comparable<Guest>, Serializable {
         guest.preferenceList.put(id, val);
     }
 
-//    public double autoGenPreference(Guest guest){
-//        if(name.equals(""))
-//            return 5;
-//
-//        double preference = 5;
-//
-//        preference += (male == guest.isMale())? 2 : -2;
-//
-//        preference += 3 - Math.abs(Math.round((age - guest.age)/2.5));
-//
-//        if(preference >= 10)
-//            preference = 9 + .01 * preference;
-//        if (preference <= 0)
-//            preference = 1 + .001 * preference; //sets apart not-like from really-not-like with auto-gen
-//
-//        return preference;
-//    }
+    public double autoGenPreference(Guest guest){
+        if(name.equals(""))
+            return 5;
+
+        double preference = 5;
+
+        if (!group.equals("") && group.equals(guest.group))
+            preference += 3;
+        else
+            preference -= 1;
+
+        return preference;
+    }
 
     public void recalculateChanges(GuestList list){
         for (Guest guest: list) {

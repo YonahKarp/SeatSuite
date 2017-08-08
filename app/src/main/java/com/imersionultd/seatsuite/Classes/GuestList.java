@@ -23,8 +23,8 @@ public class GuestList extends ArrayList<Guest> implements Serializable {
     }
 
 
-    public void add(String name){
-        Guest newGuest = new Guest(name);
+    public void add(String name, String group){
+        Guest newGuest = new Guest(name, group);
         newGuest.setId(getMaxId());
 
         for (Guest guest: this) {

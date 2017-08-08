@@ -192,16 +192,16 @@ public class GuestListActivity extends AppCompatActivity {
 
     private void addDefualtGuests(){
 
-        Guest george = new Guest("George Washington");
-        Guest lincoln = new Guest("Abraham Lincoln");
-        Guest bill = new Guest("Bill Clinton");
-        Guest hillary= new Guest("Hillary Clinton");
-        Guest gBush=new Guest("George Bush");
-        Guest lBush=new Guest("Laura Bush");
-        Guest trump= new Guest("Donald Trump");
-        Guest melania= new Guest("Melania Trump");
-        Guest obama= new Guest("Barak Obama");
-        Guest mrsbama= new Guest("Michelle Obama");
+        Guest george = new Guest("George", "Washington");
+        Guest lincoln = new Guest("Abraham", "Lincoln");
+        Guest bill = new Guest("Bill","Clinton");
+        Guest hillary= new Guest("Hillary", "Clinton");
+        Guest gBush=new Guest("George", "Bush");
+        Guest lBush=new Guest("Laura", "Bush");
+        Guest trump= new Guest("Donald", "Trump");
+        Guest melania= new Guest("Melania", "Trump");
+        Guest obama= new Guest("Barak", "Obama");
+        Guest mrsbama= new Guest("Michelle", "Obama");
 
         guestList.add(george);
         guestList.add(lincoln);

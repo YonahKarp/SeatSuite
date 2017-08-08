@@ -46,27 +46,29 @@ public class AddGuestActivity extends AppCompatActivity {
         notepadBar.setTitle("Preferences");
         notepadBar.inflateMenu (R.menu.menu_preflist);
 
-        this.setTitle("Edit Guest");
+        setTitle("Add Guest");
 
         final EditText name = ((EditText) findViewById(R.id.nameTxt));
-        //final EditText age = ((EditText) findViewById(R.id.ageTxt));
-        //gender = ((Switch) findViewById(R.id.genderSwitch));
+        final EditText group = ((EditText) findViewById(R.id.groupTxt));
+
+
 
         guestList.loadData(this,"guests");
-        currGuest = new Guest("");
+        currGuest = new Guest("","");
 
         Bundle bundle = getIntent().getExtras();
-
 
         int index = guestList.size();
         if(bundle != null){
             isEdit = true;
+            setTitle("Edit Guest");
+
             index = bundle.getInt("index");
 
             currGuest = (Guest) bundle.getSerializable("edit");
 
             name.setText(currGuest.getName());
-            //age.setText(currGuest.getAge() + "");
+            group.setText(currGuest.getGroup());
             //gender.setChecked(!currGuest.isMale());
         }
 
@@ -77,6 +79,17 @@ public class AddGuestActivity extends AppCompatActivity {
                     hideKeyboard(view);
                     if(validateName())
                         currGuest.setName(name.getText().toString());
+                }
+            }
+        });
+
+        group.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus){
+                    hideKeyboard(view);
+                    if(validateName())
+                        currGuest.setGroup(group.getText().toString());
                 }
             }
         });
@@ -97,7 +110,7 @@ public class AddGuestActivity extends AppCompatActivity {
     public void goToGuestList(View v){
 
         EditText  name = ((EditText) findViewById(R.id.nameTxt));
-//        EditText age = ((EditText) findViewById(R.id.ageTxt));
+        EditText group = ((EditText) findViewById(R.id.groupTxt));
 //        boolean gender = ((Switch) findViewById(R.id.genderSwitch)).isChecked();
 
 
@@ -106,11 +119,13 @@ public class AddGuestActivity extends AppCompatActivity {
         if(!validateName())
             return;
 
+        currGuest.setName(name.getText().toString());
+        currGuest.setGroup(group.getText().toString());
+
         if (isEdit){
             Bundle bundle = getIntent().getExtras();
             int index = bundle.getInt("index");
 
-            currGuest.setName(name.getText().toString());
 //            currGuest.setAge(Integer.parseInt(age.getText().toString()));
 //            currGuest.setMale(!gender);
 
